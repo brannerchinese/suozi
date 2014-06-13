@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<color name="red">#FF2222</color>
+	<color name="blue">#2222FF</color>
+	<color name="bluish">#8282DF</color>
+	<color name="black">#222222</color>
+	<color name="lightgrey">#BBBBBB</color>
+	<color name="palegrey">#DDDDDD</color>
+	<color name="yellow">#FFFF22</color>
+	<color name="yellowish">#BFBF33</color>
+</resources>

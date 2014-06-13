@@ -1,0 +1,571 @@
+%!TEX TS-program = xelatex
+%!TEX encoding = UTF-8 Unicode
+
+% THIS TEMPLATE IS DATED 20111201
+
+\documentclass[11pt,asymmetric]{article}
+\usepackage[tmargin=1in, bmargin=1in, lmargin=0.5in, rmargin=0.5in]{geometry}
+\geometry{letterpaper}
+%\geometry{landscape} % Activate for for rotated page geometry
+%\usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage[fleqn,reqno]{amsmath}
+\usepackage{mathspec}			% replaces amssymb; do not use unicode-math
+\usepackage{url}
+\usepackage{uml}				% for Unified Modeling Language
+\usepackage{datetime}		% allows \currenttime
+\usepackage{verbatim} % allows control of font-size of verbatim text (disadvantage: "\" must be replaced with "\(\backslash\)"
+\usepackage{bbold}				% allows use of \mathbb forms
+
+\usepackage[italic,noendash]{mathastext}	% propagates document text font to math mode; use option italic to get italic text in math mode
+
+%\usepackage{mdwtab}				% allows the use of footnotes in tables; warning --- seems to affect functioning of \hline
+\usepackage[hang,flushmargin]{footmisc}	% makes footnotes flush with margin, etc.
+\usepackage{setspace}			% control of line spacing
+\usepackage[normalem]{ulem}		% underlining (with ``normal emphasis'' retained)
+\usepackage{alltt} % allows control of font-size of verbatim text (disadvantage: "\" must be replaced with "\(\backslash\)"
+\usepackage{comment}				% allows
+%\usepackage{paralist}			% enables more compact lists; use compactitem, compactenum, and compactdesc
+%\usepackage{enumitem}			% enables more flexible spacing in lists
+%\setitemize{itemsep=0pt}
+%\setlist{nolistsep,leftmargin=0.1in}
+%\setlist{nolistsep}
+\usepackage{longtable}		% allows breaking of tables across pages with \begin{longtable}
+
+%\usepackage[italic,noendash]{mathastext}	% propagates document text font to math mode; use option italic to get italic text in math mode
+
+
+\usepackage[fallback]{xeCJK}[2011/05/01 v2.3.19]
+\usepackage{fontspec}
+\defaultfontfeatures{Mapping=tex-text}
+\setromanfont{TeX Gyre Termes}
+\setsansfont[Scale=MatchLowercase]{Doulos SIL}
+\setCJKmainfont{HAN NOM A}
+\setCJKfallbackfamilyfont{\CJKrmdefault}{Han Nom B}	% goes with Han Nom A
+
+\graphicspath{{./graphics/}}
+\DeclareGraphicsExtensions{.jpg,.jpeg,.png}
+\newcommand\gr[2]{\scalebox{#2}{\includegraphics{#1}}}
+\usepackage{calc}
+\newlength{\imgwidth}
+\newcommand\grw[1]{%   
+    \settowidth{\imgwidth}{\includegraphics{#1}}%
+    \setlength{\imgwidth}{\minof{\imgwidth}{\textwidth}}%
+    \includegraphics[width=\imgwidth]{#1}%
+}
+\newlength{\imgheight}
+\newcommand\grh[1]{%   
+    \settoheight{\imgheight}{\includegraphics{#1}}%
+    \setlength{\imgheight}{\minof{\imgheight}{\textheight}}%
+    \includegraphics[height=\imgheight]{#1}%
+}
+
+
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+\fancyhead[RO]{\textbf\leftmark}
+\fancyhead[LE]{\textbf\rightmark}
+\fancyhead[RE,LO]{\footnotesize{printed at \currenttime, \today}}
+\fancyfoot[C]{\thepage}
+\headheight14.5pt		% this value chosen in response to warning messages
+
+\usepackage{alltt}
+\usepackage{color}
+\definecolor{dark-green}{rgb}{0.2, 0.8, 0.2}
+\usepackage{listings}
+\lstset{language=Java,basicstyle=\ttfamily\footnotesize,frame=lines,captionpos=b,tabsize=4,keywordstyle=\color{blue},commentstyle=\color{dark-green},stringstyle=\color{red},numbers=left,numberstyle=\tiny,numbersep=5pt,breaklines=true,showstringspaces=false}
+\usepackage{url}
+\usepackage{hyperref}
+
+\frenchspacing
+\raggedright
+
+\parskip12pt
+
+
+
+\title{CCNY CSc 221 Software Design Lab\\Final Android Project Final Report, 20121220}
+\author{David Prager Branner}
+%\date{}                                           % Activate to display a given date or no date
+
+\setlength{\parindent}{0cm}	% no paragraph indent
+
+\begin{document}
+\maketitle
+
+
+
+
+\section{Overview}
+This is a game, in prototype, to help the user develop speed in the recognition of Chinese characters. The user is shown a ``target'' character and must select it from among a screenful of ``decoy'' characters.
+
+The goal of the game is for the user to improve his speed at selecting the target from among the decoys. This skill is directly applicable to proficiency in reading Chinese, and also to the most common task now used in generating Chinese text on a phone or computer.
+
+Note: the present report describes a later version of the project than my presentation slides of 20121218
+
+
+\section{Responsibilities}
+I did this project entirely alone, consulting only existing on-line forum-discussions (primarily Stack Overflow) until 20 December, 2012, when I paid a half-hour visit to the instructor and asked help with two issues.
+
+
+\section{Detailed Description of Components}
+
+\begin{enumerate}
+\item \texttt{MainActivity.java}: Opening screen.\begin{enumerate}
+	\item Presents a description of the game.
+	\item Presents a button to take the user to a settings screen in \texttt{Settings}.
+	\item This page finishes and cannot be revisited after the user leaves it.
+	\end{enumerate}
+
+\item \texttt{Settings.java}: Settings.\begin{enumerate}
+	\item Uses the \texttt{NumberPicker} widget and a button to let the user set the number of columns and rows in \texttt{ShowDecoyTable}.
+	\end{enumerate}
+	
+\item \texttt{ShowDecoyTable.java}: The main screen of the game\begin{enumerate}
+	\item Presents a grid of characters, all decoys except for one target.
+	\item Below the grid is a navigation bar, containing\begin{enumerate}
+		\item a button to return to \texttt{Settings} to change settings;
+		\item a colored \texttt{TextView} containing the target in the same font size as the grid;
+		\item a button to generate a new grid by.
+		\end{enumerate}
+	\item Each character in the grid has an \texttt{OnClickListener} that colors the character when the user touches it: blue if the character is indeed the target, red on black if the character is not the target.
+	\item This screen is composed of a vertical \texttt{LinearLayout} holding two child-components:\begin{enumerate}
+		\item a multi-row \texttt{TableLayout} to hold the grid;
+		\item a single row \texttt{TableLayout} to hold the navigation bar.
+		\end{enumerate}
+	\item Within the multi-row \texttt{TableLayout} of the grid, each cell contains a \texttt{TextView} holding a Chinese character and \texttt{OnClickListener} (described above).
+	\item Characters are supplied by calls to the \texttt{GenerateKanji} class.
+
+	\end{enumerate}
+
+\item \texttt{GenerateKanji.java}: Class to generate random characters and select a target from among them.\begin{enumerate}
+	\item \texttt{generateRandKanji()}: Generate a random Chinese character. Procedure:\begin{enumerate}
+		\item select a random decimal integer within the appropriate range;
+		\item convert it to a \texttt{char} using \texttt{codepointToChar}.
+		\end{enumerate}
+	
+	\item \texttt{codepointToChar}: Convert a decimal codepoint to a Unicode character. Procedure:\begin{enumerate}
+		\item convert the decimal codepoint to a hex string;
+		\item prepend the \texttt{\textbackslash u} Unicode prefix;
+		\item convert the resulting Unicode string to a \texttt{char} (required special trick).
+		\end{enumerate}
+Code:\begin{lstlisting}
+	public char codepointToChar(int iCodepoint){
+		// Given a decimal codepoint, return a char containing the kanji.
+		
+		// 1. convert to hex string (http://stackoverflow.com/a/516614; accessed 20121113)
+		// and then append UTF prefix 
+		String uCodepoint = "\\u" + Integer.toHexString( iCodepoint );
+
+		// 2. "convert" to char (http://stackoverflow.com/a/2126394 ; accessed 20121113)
+		// The following fails because \\u is not recognized as the UTF prefix
+		//     char theKanji = uCodepoint.toCharArray()[0];
+		// Instead, do more complex substring process
+		// (http://stackoverflow.com/a/2126404 ; accessed 20121113)
+		char theKanji = (char) Integer.parseInt( uCodepoint.substring(2), 16 );
+		return theKanji;
+	}
+\end{lstlisting}
+
+
+	\item \texttt{fillArray(int)}: Populate an array of random characters, assigning the \texttt{target} and \texttt{targetIndex} variables in the process. Cardinality of array is \texttt{int}.
+	\end{enumerate}
+
+\end{enumerate}
+
+
+%\section{Snippets: useful practices}
+
+
+\section{Challenges}
+\subsection{Choice of layout}
+It was difficult to know at the outset which layout would best serve this project. All the layouts have restrictions of different sorts, and at the moment I know of no comprehensive checklist or flowchart to help consider them before the fact.
+
+My main choice was among \texttt{GridView}, \texttt{GridLayout} and \texttt{TableLayout}. There was a long struggle to compare them, but the vital issues were as follows:\begin{enumerate}
+
+\item Cell-to-cell spacing. In \texttt{GridView} it is difficult to get good control of the spaces between cells dynamically, and I eventually abandoned it. \texttt{GridLayout} and \texttt{TableLayout} have better control of cell-spacing. 
+
+\item Scrolling. \texttt{TableLayout} does not scroll, but I decided against scrolling, to keep things simple. When embedding \texttt{GridLayout} in \texttt{ScrollView}, the scrolling is slow and jerky. 
+
+\item Selection of individual cell contents. \texttt{TableLayout} does not directly support give per-cell selection, but I got around this by placing a separate \texttt{TextView} in each cell. The downside of doing that is that when the dimensions of the grid are large, its population and display are slow. \texttt{GridLayout} allows cell-level selection, but that requires writing custom adapters --- considerably more work than what I ended up doing with \texttt{TableLayout}.
+\end{enumerate}
+
+There were two other challenges that arose as the result of choosing \texttt{TableLayout}.
+
+\subsection{Dynamic layout}
+Normally, the dimensions of both \texttt{GridLayout} and \texttt{TableLayout} are set in \texttt{Main\_Activity.xml}. Since I intended for the dimensions to be set by the user in all situations, it was simpler to instantiate my layouts programmatically.\footnote{The Android Developer site's arguments about the importance of segregating layout from content are somewhat ideological; in some respects --- cognitively, for instance --- content and layout are not distinguished in the superficial way they may seem to our conscious minds. It is best for the programmer to decide what the logical subdivisions of his project are. Requiring XML means a second syntactic system in a project and more windows visible at a given time, which lead to greater complexity in managing the coding process. Even in a project without XML, the programmer can segregate content-bearing fields from rest of his code, so the utility of an XML component seems to me overstated.} Not all attributes can be set programmatically, however, and in some cases programmatic access requires a certain API level. 
+
+\subsection{Font size}
+The \texttt{TextView}s I seated within \texttt{TableLayout} cells did not adjust their font-size optimally, so I wrote a code block to accomplish the same thing using an actual measurement of screen width:
+
+\begin{lstlisting}
+    float fontsize;
+    // In order to decide font size, first find screen width, 
+    // (see http://stackoverflow.com/a/1016941/621762)
+    // then divide by (approx.) number of columns.
+    Point screenDimensions = new Point();
+    Display display = getWindowManager().getDefaultDisplay();
+    display.getSize(screenDimensions);
+    // Font size in pixels — this is more useful than sp.
+    // We use cols + 1 in order to force room for an extra row at bottom.
+    fontSize = screenDimensions.x/((float)cols+1);
+\end{lstlisting}
+
+\subsection{Testing}
+Hardware and software involved:
+
+\begin{quote}
+\begin{alltt}
+Mac OS 10.8.2 on 11-inch MacBook Air, Late 2010
+Eclipse Version: Juno Service Release 1
+Build id: 20121004-1855
+Android tools: 21.0.0.v201210310015-519525
+\end{alltt}
+
+\end{quote}
+I tried using emulators first. Of the three CPU/ABI options, only MIPS seems to load successfully, and I used the 3.7-inch FWVGA slider.\footnote{No keyboard was apparent on this emulator, despite ``slider'' in the name. For user-keyboard-to-Emulator-keyboard mappings, see \url{http://developer.android.com/tools/help/emulator.html} (accessed 20121215).} Physical devices seem to need to be disconnected in order to use emulator. Sometimes there is a long wait after console message\begin{quote}
+\texttt{Waiting for HOME ('android.process.acore') to be launched...}
+\end{quote}and following \url{http://stackoverflow.com/a/4968923/621762} running the program a second time (without killing the first instance. is more successful. Emulator must be unlocked by dragging lock icon to right.
+
+Since the emulator was slow, and I did most of my work on physical machines. I used two HTC phones, Android OS v. 2.3.4 (API 10) and v. 4.0.3 (API 15). Because some of the tools I tried required an API of at least 14, I ended up using the API-15 machine for most of my work.
+
+
+\subsection{Failure to ``finish''}
+When \texttt{finish()} is called after \texttt{startActivity()}, if the new activity takes a long time to load and if a third activity is immediately called from the second, it is possible that the original \texttt{finish()} statement will not be completed. This can go on in a series of activities and slow the phone down substantially. I think there are ways, from within a new activity, to ensure that a prior activity does indeed finish, but I have not looked into them yet.
+
+
+\subsection{A scope problem connected with inner classes and intents}
+Anonymous inner classes such as \texttt{onClick()} require that any variables declared in the outer method be \texttt{final}, and this creates a problem if those variables need to be modified in the outer method. They can be declared as class fields --- before any method declarations --- and that makes them globally accessible and eliminates the need for them to be made \texttt{final}.
+
+However, there is at least one sort of field that cannot be declared this way: one that is passed as a \texttt{putExtra()} arguments in an intent from another activity. Passing an intent seems to require context to have been established, and that means that \texttt{putExtra()} arguments cannot be passed (or at least received) until after \texttt{onCreate()} has been called, and at that point \texttt{final} seems to be required.
+
+To avoid the use of final, declare variables that will receive \texttt{putExtra()} arguments as class fields, without \texttt{final}, but actually assign them within \texttt{onCreate()}. Here is an example from my code involving the variable \texttt{cols}:\begin{lstlisting}
+public class ShowDecoyTable extends Activity {
+    int cols; // as a class field, does not need to be final
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        cols = this.getIntent().getIntExtra("cols", 7); // already declared
+        ...
+        Button repopulateButton = new Button(this);
+        repopulateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ShowDecoyTable.this, ShowDecoyTable.class);
+                intent.putExtra("cols", cols); // available to onClick()
+                startActivity(intent);
+                finish();
+            }
+        ...
+    }
+    ...
+}\end{lstlisting}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Chinese Characters}
+\subsection{Generation of characters}
+Eventually, I intend to use a database to select characters randomly and for pedagogical value. But for the time being I chose a simpler method:
+
+I generate Chinese characters randomly by constructing \texttt{char} values consisting of the Unicode prefix \texttt{\textbackslash u} followed by a four-digit hex value in two codeplanes\begin{enumerate}
+\item most common characters: CJK Unified Ideographs (hereafter, ``Unified Ideographs''; codepoints 4e00--9fff); both modern traditional and simplified forms are used;
+\item rarer characters: CJK Unified Ideographs Ext. A (hereafter, ``Ext. A''; codepoints 3400--4dff); some of these are quite obscure to modern readers --- hence their utility as decoys.
+\end{enumerate}
+
+I have omitted other CJK codeplanes as too recondite for present purposes\begin{enumerate}
+\item CJK compatibility Ideographs (f900--faff); these are variant commoner in historical texts than the Unified Ideographs or Ext. A, and also tend to appear in Japanese and Korean usage.
+\item Kangxi Radicals (codepoints 2f00--2fdf)
+\item CJK Radicals Supplement (codepoints 2e80--2eff);
+\item CJK Strokes (codepoints 31c0--31ef);
+\end{enumerate}
+or too computationally difficult because surrogate pairs would be involved:\begin{enumerate}
+\item CJK Unified Ideographs Ext. B (codepoints 20000--2a6df);
+\item CJK Unified Ideographs Ext. C (codepoints 2a700--2b73f);
+\item CJK Unified Ideographs Ext. D (codepoints 2b740--2b810);
+\item CJK Compatibility Ideographs Supp. (2codepoints f800--2fa1f).
+\end{enumerate}
+Some rather rare characters, as well as independent combining-form radicals, also appear in the regular Unified Ideographs and Ext. A blocks. Not until I incorporate a database into this project will it be easy to prevent them from coming up at random.
+
+
+\subsection{Which characters can appear on an Android machine without worrying about fonts?}
+I prepared a list of the characters in the CJK Unified Ideographs Unicode block: \texttt{\textbackslash u4300} to \texttt{\textbackslash u0fc6} and pasted them into an Evernote document, to see which, if any, failed to appear. Those numbered \texttt{\textbackslash u9fb4} to \texttt{\textbackslash u9fc6} (decimal 40884--40902) failed to appear, so I have removed them from my set of possible characters. 
+
+In the block of those somewhat rare, \texttt{\textbackslash u4db6} to \texttt{\textbackslash u4dff} (decimal 19894--19967) failed to appear, so I have removed those, too.
+
+The remaining code blocks in the CJK Unified Ideographs and Ext. A all seem to be present in the font on my two test machines, and I have experimented for a while to ensure that no undisplayable characters are generated. I think a bit more work is needed.
+
+\section{Formal representations of structure}
+\subsection{UML Use Case Diagram}
+No change from the original high-level use cases: \begin{center}\gr{umd_use_case_diagram_01.png}{.1}\end{center}
+
+\subsection{UML Class Diagrams}
+
+Note: anonymous inner classes are not shown, but their fields are.
+
+\begin{enumerate}
+
+\item \umlClass[box=]{MainActivity}
+ {theLayout : LinearLayout\\
+ theView : TextView\\
+ settingsButton : Button
+ intent : Intent\\
+ menu : Menu
+ }
+ {onCreate(Bundle) : void\\
+ onCreateOptionsMenu(Menu) : boolean}
+
+
+\item \umlClass[box=]{SetSettings}
+ {theLayout : LinearLayout\\
+ theView : TextView\\
+ theNumberPicker : NumberPicker \\
+ theNumberButton : Button\\
+ pickerHeight : int\\
+ numbPickrAndButton : LinearLayout\\
+ intent : Intent\\
+ cols : int\\
+ i : int\\
+ minCol : int\\
+ maxCol : int\\
+ v : View
+ }
+ {onCreate(Bundle) : void}
+
+
+\item \umlClass[box=]{ShowDecoyTable}
+ {col\_i : int\\
+ row\_i : int\\
+ index : int\\
+ fontSize : float\\
+ targetIndex : int\\
+ rows : int\\
+ g : GenerateKanji\\
+ kanji : String[]\\
+ target : String\\
+ actionBar : ActionBar
+ theLayout : LinearLayout\\
+ theDecoyTable : TableLayout\\
+ screenDimensions : Point\\
+ display : Display\\
+ theRow : TableRow\\
+ theView : TextView\\
+ v : View\\
+ indexClicked : int\\
+ theNavigationTable : TableLayout
+ theBottomRow : TableRow\\
+ rowsButton : Button\\
+ theTargetView : TextView\\
+ repopulateButton : Button\\
+ intent : Intent\\
+ menu : Menu
+ }
+ {onCreate(Bundle) : void\\
+ onCreateOptionsMenu(Menu) : boolean}
+
+
+
+\item \umlClass[box=]{GenerateKanji}
+ {cols : int\\
+  rows : int\\
+  col\_i : int\\
+  row\_i : int\\
+  index : int\\
+  generator : Random\\
+  target : String\\
+  targetIndex : int\\
+  kanji : String[]\\
+  clicked ; String\\
+  numbKanji : int\\
+  min : int\\
+  man : int\\
+  randCodepoint : int\\
+  iCodepoint : int\\
+  uCodepoint : String\\
+  theKanji : char\\
+  currentKanji : char
+ }
+ {generateRandKanji() : char\\
+ codepointToChar(int) : char\\
+ fillArray(int) : String[]}
+
+\end{enumerate}
+
+[end]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\clearpage
+\section{Original proposal follows}
+
+\subsection{Summary Description}
+\subsubsection{Nature and goal}
+This is a game to help the user develop speed in the recognition of Chinese characters. The user is shown a ``target'' character and must select it from among a screenful of ``decoy'' characters.
+
+The goal of the game is for the user to improve his speed at selecting the target from among the decoys. This skill is directly applicable to proficiency in reading Chinese, and also to the most common task now used in generating Chinese text on a phone or computer.
+
+This project is intended to be a proof of concept. Features that may be added later to make the task more challenging, should there be time and opportunity, include:\begin{enumerate}
+	\item Gradually reducing character size.
+	\item Increasingly obfuscating the characters in various ways.
+	\item Populating the set of decoys with those that share components with the target. For instance, if the target is 銀, incorrect characters could include
+		\begin{itemize}
+		\item those containing the element 釒: for instance, 鈏, 鈐, 鈑, 鈒, 鈓, 鈔, 鈕, 鈖, 鈗, etc.
+		\item those containing the element 艮: for instance, 很, 眼, 根, 跟, 限, 退, 恨, 艱, 狠, etc.
+		\end{itemize}
+	This will require greater skill at recognizing \textit{whole} characters, an important step in developing reading speed in Chinese.
+	\item For more advanced users: Giving the user not the actual target character but some associated value, such as its pronunciation, etc. However, this feature introduces myriad problems of standardization. 
+	\item Choice of target to be selected from graded official list of Chinese characters (there are a number of such lists to choose from).
+	\end{enumerate}
+
+\subsubsection{Possible names}
+\begin{itemize}
+	\item ``zFnd'': Ugly but distinctive; suggests ``find \textit{zì} [Chinese characters]''.
+	\item ``Suozi'' \textit{suǒzì} 索字 [look for characters]. Pronounceable, (though likely to be mispronounced by people who do not know Chinese).
+	\end{itemize}
+
+\subsubsection{Possible app icons}
+To consist of the graph 索 `look for', partially obfuscated:
+  \begin{center}
+  	\gr{索02_512sq_sprayed.png}{.1}\quad
+  	\gr{索02_512sq_colored_stainedglassX10_stainedglassX50_mosaic_colorchange_glowingedges_chalk_ink_contrast_accentededges_color.png}{.1}\quad
+	\gr{索02_512sq_colored_stainedglass.png}{.1}\quad
+	\gr{索02_512sq_colored_stainedglass_angledstrokes.png}{.1}
+  \end{center}
+
+\subsection{UML Use Case Diagram}
+
+%\begin{enumerate}
+%\item User may play the game (the following sequence of steps repeats without end).
+%	\begin{enumerate}
+%	\item User is shown target character.
+%	\item User is shown a screenful of characters, mostly decoys
+%	\item User locates and touches the target.
+%	\item App states whether user's choice was correct or not, showing the location of the target among the decoys, and reports user's running score.
+%	\end{enumerate}
+%\item User may change settings.
+%\item User may quit.
+%\end{enumerate}
+
+\subsubsection{High level use cases}\begin{center}\gr{umd_use_case_diagram_01.png}{.1}\end{center}
+
+\subsubsection{Details of ``play game''}\begin{center}\gr{umd_use_case_diagram_02.png}{.1}\end{center}
+
+
+
+\subsection{Detailed Description of Components}
+
+\begin{enumerate}
+\item \texttt{GenerateTzyh}: Class to perform functions involving Chinese characters.
+
+Fields:\begin{enumerate}
+	\item \texttt{generator : Random}: A random number generator.
+	\item \texttt{target : char}: The target character.
+	\end{enumerate}
+
+Methods:
+	\begin{enumerate}
+	\item \texttt{avoidSpecialTzyh(char)}: Generate random characters until the specified one is reached.
+	\item \texttt{codepoint2Char(int)}: Given any decimal Unicode codepoint, return a char containing the corresponding encoded Chinese character.
+	\item \texttt{generateRandTzyh()}: Generate a random integer and from it call codepoint2Char.
+	\item \texttt{checkIfMatch(char)}: Report on whether the User has correctly identified the target.
+
+	\item \textit{for later}: Methods to restrict target to a particular subset of characters.
+	\item Note: high Unicode codepoints, requiring the use of surrogate pairs, are apparently not support on Android by default. 
+	\end{enumerate}
+
+\item \texttt{Decoys}: Class to populate an ArrayList with one instance of the target and the rest ``decoys'' (random Chinese characters)\begin{enumerate}
+	\item Method to ensure that no decoy is the same as the target.
+	\item \textit{for later}: Methods to refine the choice of decoys to increase difficulty.
+	\end{enumerate}
+
+\item Settings class\begin{enumerate}
+	\item \texttt{displaySize}: Number of characters per ``screenful''; will we use a square grid? if so, this value should be number of characters per side.
+	\item \texttt{score}: For future use in scoring analytics, this will be modeled as an ArrayList.
+	\item \textit{for later}: other settings related to added difficulty (obfuscation, distractions, etc.) and to choice of characters for graded self-testing.
+	\end{enumerate}
+
+\item Class to manage Views\begin{enumerate}
+	\item Grid of characters
+	\item Settings
+	\item Display of target
+	\item Report of results of each round of the game
+	\item Report of running score
+	\end{enumerate}
+
+\end{enumerate}
+
+
+\subsection{UML Class Diagrams}
+
+
+
+\begin{enumerate}
+
+\item \umlClass[box=]{CharacterGenerator}
+ {target : char\\
+ generator : Random
+ }
+ {avoidSpecialTzyh(char) : void\\
+ checkIfMatch(char) : void\\
+ codepoint2Char(int) : char\\
+ generateRandTzyh() : char}
+
+\item \umlClass[box=]{Decoys}{[pending --- perhaps only a single method]}{}
+
+\item \umlClass[box=]{Settings}
+ {displaySize : int\\
+ score : ArrayList\\
+ 
+}{[pending]}
+
+\item \umlClass[box=]{ViewManager}{[pending]}{}
+
+\end{enumerate}
+
+
+
+\subsection{Group Responsibilities}
+
+I have decided to do this project alone.
+
+
+
+
+
+%\umlDiagram[box=,sizeX=7cm, sizeY=7cm, ref=relation]{%
+%                 \umlClass[pos=\umlBottomLeft{relation}, posDelta={1,1}, refpoint=bl,
+%                           reference=A]{Class A}{}{}%
+%                 \umlClass[pos=\umlTopRight{relation}, posDelta={-1,-1}, refpoint=tr,
+%                           reference=B]{Class B}{}{}%
+%                 \umlRelation{A}{B}{
+%                   \umlLabelA{AB}{*}
+%                   \umlLabelB{AB}{1}}
+%                 \umlLabel[fraction=.5,offset=0]{AB}{center}
+%                 \umlAssociationEnd[fraction=A, angle=U]{AB}{A}
+%                 \umlAssociationEnd[fraction=B, angle=R]{AB}{B}
+%                 \umlSubclass[ref=ABsub, angleA=0, armA=5, armAngleA=0,
+%                   angleB=300, linecolor=blue,nodesep=1ex]{A}{B}
+%                 \umlComposition[reference=ABComp,
+%                   angleA=120, arm=4, armAngleA=80,
+%                   angleB=180, armAngleB=190]{A}{B}
+%                 \umlNavigabilityA{ABComp}
+%                 }
+
+\end{document}
+
+
+\end{document}
+
+
+
+
+
+
+

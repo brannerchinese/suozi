@@ -1,0 +1,483 @@
+\documentclass{beamer}
+
+\usepackage{graphicx} % for \rotatebox
+
+\usepackage{xeCJK}
+\newfontlanguage{Chinese}{CHN}
+\setCJKmainfont{SimSun}
+\newfontfamily\songextb{PMingLiU-ExtB}	% goes with Simsun (Founder Extended)
+\setCJKfamilyfont{songvert}[Script=CJK,Language=Chinese,Vertical=RotatedGlyphs]{SimSun}
+\setromanfont[Scale=1,Mapping=tex-text]{TeX Gyre Heros Cn}
+
+\newcommand*\CJKmovesymbol[1]{\raise.35em\hbox{#1}}
+\newcommand*\CJKmove{\punctstyle{plain}% do not modify the spacing between punctuations
+  \let\CJKsymbol\CJKmovesymbol
+  \let\CJKpunctsymbol\CJKsymbol}
+\def\CJKsymbol#1{%
+  \iffontchar\font`#1%
+    #1%
+  \else
+    {\songextb#1}%
+  \fi}
+
+
+\graphicspath{{./graphics/}}
+\DeclareGraphicsExtensions{.jpg,.jpeg,.png}
+\newcommand\gr[2]{\scalebox{#2}{\includegraphics{#1}}}
+
+\title{CSc 221 Android Project Report}
+\author{David Prager Branner}
+\date{December 18, 2012\\\quad\\Grove School of Engineering\\City College of New York}
+
+\begin{document}
+
+\frame{\titlepage}
+
+
+\frame{
+  \frametitle{Basic idea}
+
+  \begin{itemize}
+  \item<2-> practice recognizing whole Chinese characters, to improve your speed (not vocabulary)
+  \item<3-> characters chosen at random, one ``target'' assigned to user to find among ``decoys''
+  \item<4-> app indicates right and wrong choices
+  \end{itemize}
+}
+
+
+
+\frame{
+ \frametitle{Demonstration}
+}
+
+\frame{
+ \frametitle{Demonstration --- Opening screen, choose dimensions}
+\begin{center}
+
+\gr{05a1_open.png}{.25}
+\end{center}
+ }
+
+\frame{
+ \frametitle{Demonstration --- Shown target at bottom}
+\begin{center}
+\gr{05a2_choose.png}{.25}
+\end{center}
+ }
+
+\frame{
+ \frametitle{Demonstration --- Correct choice turns blue}
+\begin{center}
+\gr{05a3_chosen_right.png}{.25}
+\end{center}
+ }
+
+\frame{
+ \frametitle{Demonstration --- Incorrect choices turn red on black}
+\begin{center}
+\gr{05a4_chosen_wrong.png}{.25}
+\end{center}
+ }
+
+\frame{
+ \frametitle{Demonstration --- After incorrect choice, can choose again}
+\begin{center}
+\gr{05a5_chosen_wrong_then_right.png}{.25}
+\end{center}
+ }
+
+\frame{
+ \frametitle{Demonstration --- More interesting with more decoys}
+\begin{center}
+\gr{07a1_open.png}{.25}
+\end{center}
+ }
+
+\frame{
+ \frametitle{Demonstration --- More interesting with more decoys}
+\begin{center}
+\gr{07a2_choose.png}{.25}
+\end{center}
+ }
+
+\frame{
+ \frametitle{Demonstration --- \textbf{More} interesting with \textbf{more} decoys}
+\begin{center}
+\gr{16a1_open.png}{.25}
+\end{center}
+ }
+
+\frame{
+ \frametitle{Demonstration --- \textbf{More} interesting with \textbf{more} decoys}
+\begin{center}
+\gr{16a2_choose.png}{.25}
+\end{center}
+ }
+
+\frame{
+ \frametitle{Demonstration --- \textbf{More} interesting with \textbf{more} decoys}
+\begin{center}
+\gr{16a3_chosen_wrong.png}{.25}
+\end{center}
+ }
+
+\frame{
+ \frametitle{Demonstration --- \textbf{More} interesting with \textbf{more} decoys}
+\begin{center}
+\gr{16a4_chosen_wrong_then_right.png}{.25}
+\end{center}
+ }
+
+\frame{
+ \frametitle{Demonstration --- \textbf{\textit{More}} interesting with \textbf{\textit{more}} decoys!}
+\begin{center}
+\gr{20a1_open.png}{.25}
+\end{center}
+ }
+
+\frame{
+ \frametitle{Demonstration --- \textbf{\textit{More}} interesting with \textbf{\textit{more}} decoys!}
+\begin{center}
+\gr{20a2_choose.png}{.25}
+\end{center}
+ }
+
+\frame{
+ \frametitle{Demonstration --- \textbf{\textit{More}} interesting with \textbf{\textit{more}} decoys!}
+\begin{center}
+\gr{20a3_chosen_right.png}{.25}
+\end{center}
+ }
+
+\frame{
+ \frametitle{Demonstration --- OCD is helpful to studying Chinese}
+\begin{center}
+\gr{20a4_again.png}{.25}
+\end{center}
+ }
+
+\frame{
+ \frametitle{Demonstration --- OCD is helpful to studying Chinese}
+\begin{center}
+\gr{20a5_choose.png}{.25}
+\end{center}
+ }
+
+\frame{
+ \frametitle{Demonstration --- OCD is helpful to studying Chinese}
+\begin{center}
+\gr{20a6_again.png}{.25}
+\end{center}
+ }
+
+\frame{
+ \frametitle{Demonstration --- OCD is helpful to studying Chinese}
+\begin{center}
+\gr{20a7_choose.png}{.25}
+\end{center}
+ }
+
+\frame{
+ \frametitle{Demonstration --- More OCD is more helpful}
+\begin{center}
+\gr{20a8_again.png}{.25}
+\end{center}
+ }
+
+\frame{
+ \frametitle{Demonstration --- More OCD is more helpful}
+\begin{center}
+\gr{20a9_choose.png}{.25}
+\end{center}
+ }
+
+\frame{
+ \frametitle{Demonstration --- \textbf{More} OCD is \textbf{more} helpful}
+\begin{center}
+\gr{20a10_choose.png}{.25}
+\end{center}
+}
+
+\frame{
+ \frametitle{Implementation}
+  \begin{itemize}
+  \item<2-> Chinese characters generated as random Unicode values
+  \item<3-> each placed in a single \texttt{TextView}, with some \texttt{OnClickListener} functionality
+  \item<4-> each \texttt{TextView} is one cell in a \texttt{TableLayout}
+  \item<5-> a secondary single-row \texttt{TableLayout} for navigation at screen bottom
+  \item<6-> the two \texttt{TableLayout}s reside in a \texttt{RelativeLayout} (top level)
+  \item<7-> character font-size optimized to fit screen
+  \end{itemize}
+}
+
+\frame{
+ \frametitle{Challenges}
+ \begin{itemize}
+ \item<2-> \textbf{choosing suitable layout}\uncover<3->{--- ``solved'' through trial and error}
+ \item<4-> understanding how to actually \textbf{implement Google's API} \uncover<5->{--- no solution}\uncover<6->{; enormously time-consuming}\uncover<7->{; without StackOverflow.com there would be no hope}
+ \item<8-> \textbf{dynamic formatting} of \texttt{TextViews} and dimensions of \texttt{TableLayout} \uncover<9->{--- minimal use of \texttt{activity\_main.xml} for layout}\uncover<10->{; mostly done programmatically}\uncover<11->{, which has led to other problems}
+ \end{itemize}
+}
+
+\frame{
+ \frametitle{Use of time}
+ \begin{itemize}
+ \item<2-> 26 days in all
+ \item<3-> 1 spent on Chinese, writing proof of concept with plain Java and Swing
+ \item<4-> 18 spent struggling with Google's ``Guide'' tutorials\uncover<5->{ (actual errors found)}
+ \item<6-> 5 spent experimenting with layouts
+ \item<7-> 2 spent trying to implement various methods and tuning performance
+ \end{itemize}
+
+ }
+
+\frame{
+ \frametitle{Unimplemented ideas}
+ \begin{itemize}
+ \item<2-> report time-score in \texttt{ActionBar}
+ \item<3-> pedagogically more interesting choice of characters (right now, random)\uncover<4->{ --- requires database}
+ \item<5-> obfuscation of screen to make identification more challenging
+ \item<6-> proper user control of settings
+ \item<7-> more game-like qualities
+ \end{itemize}
+
+ }
+
+\frame{
+ \frametitle{Problems}
+ \begin{itemize}
+ \item<2-> \texttt{NumberPicker} on opening screen does not pass value
+ \item<3-> within \texttt{OnClickListener} environment, objects are not accessible\uncover<4->{ --- perhaps because of over-reliance on programmatic, non-XML layout}
+ \item<5-> ``again'' button calls layout-building code recursively --- a recipe for disaster
+ \end{itemize}
+
+ }
+
+\frame{
+\begin{center}END
+
+\huge{終}\end{center}
+ }
+
+%\frame{
+% \frametitle{Topic of study: Parallel prose --- examples, parsed}
+%
+%\begin{table}[htdp]
+%\begin{tabular}{cp{.6\textwidth}}
+%
+%\Large
+%
+%\rotatebox{-90}{\mbox{\begin{minipage}{10em}
+%\CJKfamily{songvert}\CJKmove
+%素愛其文\\
+%　●　○\\
+%不能釋手\\
+%　○　●
+%\end{minipage}}}
+%
+%&
+%
+%\vskip12pt From Xiāo Tǒng 蕭統, ``\textit{Táo Yuānmíng jí} xù 陶淵明集序''
+%
+%\vskip12pt Traditional symbols: 
+%
+%\parindent2em○ \textit{píng}-tone syllable
+%
+%● \textit{zè} (non-\textit{píng}) syllable)\parindent0em
+%\end{tabular}
+%\end{table}%
+%}
+%
+%\frame{
+% \frametitle{Topic of study: Parallel prose --- examples, parsed}
+%
+%\begin{table}[htdp]
+%\begin{tabular}{cp{.6\textwidth}}
+%
+%\Large
+%
+%\rotatebox{-90}{\mbox{\begin{minipage}{10em}
+%\CJKfamily{songvert}\CJKmove
+%素愛其文\\
+%　●　○\\
+%不能釋手\\
+%　○　●
+%\end{minipage}}}
+%
+%&
+%
+%\vskip12pt From Xiāo Tǒng 蕭統, ``\textit{Táo Yuānmíng jí} xù 陶淵明集序''
+%
+%\vskip12pt Traditional symbols: 
+%
+%\parindent2em○ \textit{píng}-tone syllable
+%
+%● \textit{zè} (non-\textit{píng}) syllable)\parindent0em
+%
+%\vskip12pt This alternation of tone-types (within single lines and between related lines in a couplet) is very common from the mid-6th century onward.
+%\end{tabular}
+%\end{table}%
+%}
+%
+%
+%\frame{
+% \frametitle{Topic of study: Parallel prose --- examples, parsed}
+%
+%\begin{table}[htdp]
+%\begin{tabular}{cp{.6\textwidth}}
+%
+%\Large
+%
+%\rotatebox{-90}{\mbox{\begin{minipage}{10em}
+%\CJKfamily{songvert}\CJKmove
+%素愛其文\\
+%　●　○\\
+%不能釋手\\
+%　○　●
+%\end{minipage}}}
+%
+%&
+%
+%
+%\vskip12pt It is surely related to the aesthetics of performance. From the Míng we have records saying that \textit{píng} tones are to be prolonged and \textit{zè} tones left short (in contrast). This practice is easy to observe in modern performance in Taiwan and elsewhere.
+%\end{tabular}
+%\end{table}%
+%}
+%
+%\frame{
+% \frametitle{Topic of study: Parallel prose --- examples, parsed}
+%
+%\begin{table}[htdp]
+%\begin{tabular}{cp{.6\textwidth}}
+%
+%\Large
+%
+%\rotatebox{-90}{\mbox{\begin{minipage}{10em}
+%\CJKfamily{songvert}\CJKmove
+%素愛其文\\
+%　●　○\\
+%不能釋手\\
+%　○　●
+%\end{minipage}}}
+%
+%&
+%
+%\vskip12pt The retrospective Chinese name of this style, from the Manchu ero, has been \textit{piánwén} 駢文 'teamed-[horse] writing'.
+%
+%\vskip12pt In English, often termed ``parallelism'' or ``antithesis''. Unsatisfactory.
+%
+%\vskip12pt Chinese \textit{duì} 對 n. 'couplet', v. 'to pair, to match, to put in opposition to'.
+%
+%\vskip12pt Chinese \textit{duìchèn} 對稱/對襯 `symmetrical'. Lit. ``\textbf{counter-balanced}''.
+%\end{tabular}
+%\end{table}%
+%}
+%
+%\title{Are There Regional Styles of Prosody\\in Sixth-Century \textbf{Counterbalanced} Prose?}
+%\author{David Prager Branner, with William E. Skeith, III\\``Poetry and Place: The Rise of the South''\\Princeton University}
+%\date{October 27, 2012}
+%
+%\frame{\titlepage}
+%
+%\frame{
+% \frametitle{Topic of study: Parallel prose}
+% }
+%
+%
+%\frame{
+% \frametitle{Topic of study: Parallel prose --- more complex cases}
+%
+%\begin{table}[htdp]
+%\begin{tabular}{cp{.4\textwidth}}
+%
+%\Large
+%
+%\rotatebox{-90}{\mbox{\begin{minipage}{10em}
+%\CJKfamily{songvert}\CJKmove
+%西蜀豪家\\
+%\\
+%託情窮於魯殿\\
+%\\
+%東儲甲觀\\
+%\\
+%誦詠止於洞簫\\
+%　
+%\end{minipage}}}
+%
+%&
+%
+%\vskip12pt From Xú Líng 徐陵, ``\textit{Yùtái xīnyǒng} xù 玉臺新詠序''.
+%
+%\end{tabular}
+%\end{table}%
+%}
+%
+%
+%\frame{
+% \frametitle{Topic of study: Parallel prose --- more complex cases}
+%
+%\begin{table}[htdp]
+%\begin{tabular}{cp{.4\textwidth}}
+%
+%\Large
+%
+%\rotatebox{-90}{\mbox{\begin{minipage}{10em}
+%\CJKfamily{songvert}\CJKmove
+%西蜀豪家\\
+%\\
+%託情窮\textbf{於}魯殿\\
+%\\
+%東儲甲觀\\
+%\\
+%誦詠止\textbf{於}洞簫\\
+%　
+%\end{minipage}}}
+%
+%&
+%
+%\vskip12pt From Xú Líng 徐陵, ``\textit{Yùtái xīnyǒng} xù 玉臺新詠序''.
+%
+%\vskip12pt Example of ``interlarded'' couplets (\textit{géjù duì} 隔句對). From line-lengths and semantics alone this is evident.
+%
+%\end{tabular}
+%\end{table}%
+%}
+%
+%
+%\frame{
+% \frametitle{Topic of study: Parallel prose --- more complex cases}
+%
+%\begin{table}[htdp]
+%\begin{tabular}{cp{.4\textwidth}}
+%
+%\Large
+%
+%\rotatebox{-90}{\mbox{\begin{minipage}{10em}
+%\CJKfamily{songvert}\CJKmove
+%西蜀豪家\\
+%\\
+%託情窮於魯殿\\
+%\\
+%東儲甲觀\\
+%\\
+%誦詠止\textbf{於}洞簫\\
+%　
+%\end{minipage}}}
+%
+%&
+%
+%Someone from a powerful clan, of Western Shǔ,
+%
+%\vskip6pt gave expression to his feelings, but to exhaustion, \textbf{with} ``Lǔ Palace'' ---
+%
+%\vskip6pt while a Crown Prince, in his First Temple,
+%
+%\vskip6pt chanted, but stopped \textbf{at} ``The holed flute.'' \parindent0em
+%
+%\end{tabular}
+%\end{table}%
+%}
+
+
+
+\end{document}
